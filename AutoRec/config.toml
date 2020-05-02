@@ -1,0 +1,47 @@
+# Dataset
+root_path = "./data"
+# ml-1m / ml-100k
+dataset = 'ml-1m'
+# ml-1m
+total_rating = 1000209
+# ml-100k
+# total_rating = 100000
+train_ratio = 0.9
+
+# Network
+# for ml-1m
+num_users = 6040
+num_items = 3952
+# for ml-100k
+# num_users = 943
+# num_items = 1682
+hidden_units = 500
+lambda = 1
+
+# Training
+
+# whether to use nVidia cuda
+cuda = false
+# random seed
+seed = 1000
+# total epochs for training
+epochs = 5
+# nums of sample of each step
+batch_size = 100
+# clip the grad when exceeded the limitation
+grad_clip = false
+# learning rate at the beginning
+base_lr = 1e-3
+# decay the learning rate for each n steps
+decay_step = 50
+# output log for each n steps
+log_step = 20
+# Adam / RMSProp
+optimizer = "Adam"
+
+# Logger
+console_output = true
+log_root = "./log"
+log_name = "autorec"
+append_time = true
+
