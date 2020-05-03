@@ -11,4 +11,4 @@ Author(s):
 
 Year: 2015
 
-**Proceedings of the 24th International Conference on World Wide Web - WWW '15 Companion**
+Proceedings of the 24th International Conference on World Wide Web - WWW '15 Companion
