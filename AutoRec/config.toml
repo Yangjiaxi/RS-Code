@@ -10,7 +10,7 @@ lambda = 0.5
 
 # >>> Training
 cuda = false
-seed = 1000 # random seed
+seed = 5760 # random seed
 epochs = 50
 batch_size = 100
 grad_clip = false # clip the grad to [1, 5]

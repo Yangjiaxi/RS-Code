@@ -13,10 +13,18 @@ import numpy
 if __name__ == "__main__":
     config = toml.load("config.toml")
 
+    logger_setup(config)
+
     if 'seed' in config:
         seed = config['seed']
         torch.manual_seed(seed)
         numpy.random.seed(seed)
+        logging.info('Random seed: {}'.format(seed))
+    else:
+        seed = numpy.random.randint(1, 10000, (1,))[0]
+        torch.manual_seed(seed)
+        numpy.random.seed(seed)
+        logging.info('Random seed: {}'.format(seed))
 
     if config['dataset'] == 'ml-1m':
         config.update({
@@ -33,8 +41,6 @@ if __name__ == "__main__":
     else:
         raise ValueError("Invalid dataset: `{}`, optional: [`ml-1m`, `ml-100k`]".format(config['dataset']))
 
-    logger_setup(config)
-
     data_loader = MovieLensDataLoader(config)
     train_data, test_data = data_loader.split()
 
@@ -46,9 +52,11 @@ if __name__ == "__main__":
         logging.info('CUDA disabled')
 
     agent = Trainer()
+
     agent.set_model(model)
     agent.set_data(train_data, test_data)
     agent.set_config(config)
+    
     agent.build()
 
     agent.start()
