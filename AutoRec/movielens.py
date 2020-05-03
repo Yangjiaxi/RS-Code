@@ -2,9 +2,6 @@ import logging
 import numpy as np
 from os import path
 
-import torch
-from torch.utils.data import Dataset, TensorDataset, random_split
-
 
 class MovieLensDataLoader:
     def __init__(self, config):
@@ -16,8 +13,7 @@ class MovieLensDataLoader:
         self.total_rating = config['total_rating']
         self.train_ratio = config['train_ratio']
 
-        self.data = None
-
+        self.data = np.zeros((self.num_users, self.num_items))
         if config['dataset'] == 'ml-1m':
             self.load_1m()
         elif config['dataset'] == 'ml-100k':
@@ -46,26 +42,34 @@ class MovieLensDataLoader:
         logging.info('Using dataset `ml-1m`')
 
         data_file = path.join(self.root_path, 'ml-1m', 'ratings.dat')
+        self.load_data(data_file, "::")
 
-        '''
-            input contains `self.total_rating` lines
-            each line is made up of 4 parts and separate with `::` 
+    def load_100k(self):
+        logging.info('Using dataset `ml-100k`')
+
+        data_file = path.join(self.root_path, 'ml-100k', 'u.data')
+        self.load_data(data_file, "\t")
+
+    def load_data(self, file_name, sep):
+        """
+            Input contains `self.total_rating` lines,
+            each line is made up of 4 parts and separate with `::` ,
             i.e. `UserID::MovieID::Rating::Timestamp`
             `Timestamp` will not be used here
-            
-            1. we read all lines and construct a Dataset holds all
-            2. use `torch.utils.data.random_split` to get two datasets
-            
-            at each step, loader gives a mini-batch which seems like (batch_size * num_items), 
+
+            1. We read all lines and construct a ndarray holds all
+            2. Randomly permutation the indices to get two datasets
+
+            At each step, loader gives a mini-batch which seems like (batch_size * num_items),
             network should output like (batch_size * num_items), which means we predicate `A` using `A`.
-            
-            By doing so, we may find correct arguments in the network, 
+
+            In fact, for each line in a mini-batch, it represents a part of tastes of
+            this particular user. Those non-zero elements is what we use to train.
+
+            By doing so, we may find correct arguments in the network,
             which may generalize to unseen (user, item) pairs.
-        '''
-
-        self.data = np.zeros((self.num_users, self.num_items))
-
-        with open(data_file) as f:
+        """
+        with open(file_name) as f:
             lines = f.readlines()
 
             if not len(lines) == self.total_rating:
@@ -74,19 +78,10 @@ class MovieLensDataLoader:
                     "but actually {}".format(self.total_rating, len(lines)))
 
             for line in lines:
-                user, item, rating, _ = line.split("::")
+                user, item, rating, _ = line.split(sep)
                 # user / item number is start from 1
                 # BUT !
                 # YOU KNOW !
                 user_idx = int(user) - 1
                 item_idx = int(item) - 1
                 self.data[user_idx, item_idx] = int(rating)
-
-    def load_100k(self):
-        logging.info('Using dataset `ml-100k`')
-
-    def __getitem__(self, index: int):
-        return super().__getitem__(index)
-
-    def __len__(self) -> int:
-        return super().__len__()
