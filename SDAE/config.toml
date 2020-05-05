@@ -1,0 +1,26 @@
+# seed = 5760 # random seed
+
+# >>> training
+cuda = false
+epochs = 10
+batch_size = 32
+optimizer = "Adam"
+base_lr = 0.0002
+weight_decay = 1e-5
+
+# >>> data
+name = 'MNIST'
+size = 28
+noise_type = 'speckle' # gaussian / speckle
+data_root = './data'
+gaussian_std = 0.2
+gaussian_mean = 0
+speckle_std = 1
+speckle_mean = 0
+
+# >>> log
+# >>> Logger
+console_output = true
+log_root = "./log"
+log_name = "autorec"
+append_time = true
