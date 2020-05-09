@@ -1,0 +1,28 @@
+# >>> Dataset
+root_path = "./data"
+# ml-1m / ml-100k
+dataset = 'ml-1m'
+train_ratio = 0.9
+
+# >>> Network
+hidden_units = 20
+activation_1 = 'relu'
+activation_2 = 'sigmoid'
+dropout = 0.5
+lambda = 0.01
+
+# >>> Training
+cuda = false
+#seed = 5760 # random seed
+epochs = 10
+batch_size = 100
+base_lr = 1e-3
+decay_step = 50 # decay the learning rate for each n steps
+log_step = 20
+optimizer = "Adam" # Adam / RMSProp / SGD
+
+# >>> Logger
+console_output = true
+log_root = "./log"
+log_name = "CDAE"
+append_time = true
